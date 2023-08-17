@@ -232,14 +232,230 @@
 
 1. **Check the implementability of the most frequently used OPENSSH commands in the MS Windows operating system. (Description of the expected result of the commands + screenshots: command – result should be presented)**
 
+    Firstly, I decided to check if SSH existed.
+
+    ```
+    C:\Users\Roman\Desktop>ssh
+
+    usage: ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-B bind_interface]
+            [-b bind_address] [-c cipher_spec] [-D [bind_address:]port]
+            [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11]
+            [-i identity_file] [-J [user@]host[:port]] [-L address]
+            [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]
+            [-Q query_option] [-R address] [-S ctl_path] [-W host:port]
+            [-w local_tun[:remote_tun]] destination [command]
+    ```
+
+    After that, I tried to see if the connection worked:
+
+    ```
+    C:\Users\Roman\Desktop>ssh student@192.168.0.108
+
+    The authenticity of host '192.168.0.108 (192.168.0.108)' can't be established.
+    ECDSA key fingerprint is SHA256:yp8INOs6pk/gVv7G84N/cRT3KsgxLPiH81jZ/cRpz0o.
+    Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+    Warning: Permanently added '192.168.0.108' (ECDSA) to the list of known hosts.
+    student@192.168.0.108's password:
+    Welcome to Ubuntu 14.04.3 LTS (GNU/Linux 3.13.0-63-generic i686)
+
+    * Documentation:  https://help.ubuntu.com/
+    New release '16.04.7 LTS' available.
+    Run 'do-release-upgrade' to upgrade to it.
+
+    Last login: Wed Aug 16 22:19:58 2023 from 192.168.0.107
+    student@CsnKhai:~$
+    ```
+
+    Then I tried to use scp to copy some files:
+
+    ```
+    C:\Users\Roman\Desktop>scp student@192.168.0.108:/home/student/myfile.txt "C:\Users\Roman\Desktop"
+    student@192.168.0.108's password:
+    myfile.txt
+    ```
+
+    Lastly, I tried ssh-keygen:
+
+    ```
+    C:\Users\Roman\Desktop>ssh-keygen
+    Generating public/private rsa key pair.
+    Enter file in which to save the key (C:\Users\Roman/.ssh/id_rsa): test_file
+    Enter passphrase (empty for no passphrase):
+    Enter same passphrase again:
+    Your identification has been saved in test_file.
+    Your public key has been saved in test_file.pub.
+    The key fingerprint is:
+    SHA256:FMZixzCUgwWIex9v4WxNGqcKlXfmq1SAhTXbkgaoVvY roman@DESKTOP-U3S9QLA
+    The key's randomart image is:
+    +---[RSA 3072]----+
+    | . ooBO=o        |
+    |. ooo+=B+.       |
+    | oo oo*+o        |
+    |o.. +E++=        |
+    |.. o * %S        |
+    |  . . O.o        |
+    |   . +.  .       |
+    |    ..  .        |
+    |      ..         |
+    +----[SHA256]-----+
+    ```
 
 2. **Implement basic SSH settings to increase the security of the client-server connection.**
 
+    To implement the basic SSH settings, I've done the following:
+
+    - Changed default port
+    - Disabled root login
+    - Enabled login only with SSH key
+    
+    <br>
+    
+    These configurations are provided below:
+
+    ![](images/sshd_config.png)
+
+    After that, I copied the public key to the remote server and added it to authorized_keys with `cat id_rsa.pub >> ~/.ssh/authorized_keys` restarted the service with `sudo service ssh restart` and checked the connection. It worked.
 
 3. **List the options for choosing keys for encryption in SSH. Implement 3 of them.**
 
+    According to `ssh-keygen --help`, Windows supports the following options:
+
+    ```
+     [-t dsa | ecdsa | ed25519 | rsa]
+    ```
+
+    `man ssh-keygen` says that the Linux version supports the same algorithms:
+
+    ```
+    Contains the protocol version 2 DSA, ECDSA, ED25519 or RSA authentication identity of the user.
+    ```
+
+    Implementation logs are provided below.
+
+    DSA:
+
+    ```
+    student@CsnKhai:~$ ssh-keygen -t dsa
+    Generating public/private dsa key pair.
+    Enter file in which to save the key (/home/student/.ssh/id_dsa): dsa_key
+    Enter passphrase (empty for no passphrase): 
+    Enter same passphrase again: 
+    Your identification has been saved in dsa_key.
+    Your public key has been saved in dsa_key.pub.
+    The key fingerprint is:
+    9b:12:a9:02:4e:9f:b4:32:41:35:12:ba:8a:d1:82:f0 student@CsnKhai
+    The key's randomart image is:
+    +--[DSA 1024]----+
+    | o.o             |
+    |. o .            |
+    |o.               |
+    |++     .         |
+    |*oE.  o S        |
+    |=++ o. . o       |
+    |o+.+. . o        |
+    |  o.   .         |
+    |                 |
+    +-----------------+
+    ```
+
+    ECDSA:
+
+    ```
+    student@CsnKhai:~$ ssh-keygen -t ecdsa
+    Generating public/private ecdsa key pair.
+    Enter file in which to save the key (/home/student/.ssh/id_ecdsa): ecdsa_key
+    Enter passphrase (empty for no passphrase): 
+    Enter same passphrase again: 
+    Your identification has been saved in ecdsa_key.
+    Your public key has been saved in ecdsa_key.pub.
+    The key fingerprint is:
+    c5:6d:51:9b:84:29:ed:97:c1:37:0a:6e:63:cd:3b:9e student@CsnKhai
+    The key's randomart image is:
+    +--[ECDSA  256]---+
+    |           ..=o  |
+    |         ..o+oo+.|
+    |          +o* ++.|
+    |         . *.+o  |
+    |        S o ...  |
+    |             o   |
+    |            . o  |
+    |             E   |
+    |                 |
+    +-----------------+
+    ```
+
+    ED25519:
+
+    ```
+    student@CsnKhai:~$ ssh-keygen -t ed25519
+    Generating public/private ed25519 key pair.
+    Enter file in which to save the key (/home/student/.ssh/id_ed25519): ed25519_key
+    Enter passphrase (empty for no passphrase): 
+    Enter same passphrase again: 
+    Your identification has been saved in ed25519_key.
+    Your public key has been saved in ed25519_key.pub.
+    The key fingerprint is:
+    69:9a:44:86:3d:e5:d8:6c:f7:66:b9:5a:7a:3d:8b:4d student@CsnKhai
+    The key's randomart image is:
+    +--[ED25519  256]--+
+    |        .        |
+    |     o *         |
+    |    . * = .      |
+    |     o o o . .   |
+    |      . S   =    |
+    |     . +   o .   |
+    |      o     o.E  |
+    |           +.+o  |
+    |          o.. oo |
+    +-----------------+
+    ```
 
 4. **Implement port forwarding for the SSH client from the host machine to the guest Linux virtual machine behind NAT.**
 
+    Here's the part of `ifconfig` output before port forwarding:
 
-5\*. **Intercept (capture) traffic (tcpdump, wireshark) while authorizing the remote client on the server using ssh, telnet, rlogin. Analyze the result.**
+    ```
+    student@CsnKhai:~$ ifconfig
+
+    eth0      Link encap:Ethernet  HWaddr 08:00:27:ed:14:1d  
+              inet addr:192.168.0.108  Bcast:192.168.0.255  Mask:255.255.255.0
+              inet6 addr: fe80::a00:27ff:feed:141d/64 Scope:Link
+    ```
+
+    And after port forwarding:
+
+    ```
+    student@CsnKhai:~$ ifconfig
+    eth0      Link encap:Ethernet  HWaddr 08:00:27:ed:14:1d  
+              inet addr:10.0.2.15  Bcast:10.0.2.255  Mask:255.255.255.0
+              inet6 addr: fe80::a00:27ff:feed:141d/64 Scope:Link
+    ```
+
+    VirualBox setup:
+
+    ![](images/nat_vbox.png)
+
+    Connection attempt:
+
+    ```
+    PS C:\Users\Roman> ssh -p 7483 -i C:\Users\Roman\.ssh\ubuntu student@127.0.0.1
+    Welcome to Ubuntu 14.04.3 LTS (GNU/Linux 3.13.0-63-generic i686)
+
+    * Documentation:  https://help.ubuntu.com/
+    New release '16.04.7 LTS' available.
+    Run 'do-release-upgrade' to upgrade to it.
+
+    Last login: Thu Aug 17 19:10:47 2023 from 10.0.2.2
+    student@CsnKhai:~$
+    ```
+
+5. **Intercept (capture) traffic (tcpdump, wireshark) while authorizing the remote client on the server using ssh, telnet, rlogin. Analyze the result.**
+
+    When trying to intercept data via Wireshark and SSH, the data was readable, but after the connection was initialized, it became encrypted.
+
+    ![](images/wireshark_ssh_1.png)
+    ![](images/wireshark_ssh_2.png)
+
+    Telnet, on the other hand, is insecure.:
+
+    ![](images/telnet.png)
