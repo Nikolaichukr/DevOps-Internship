@@ -1,6 +1,6 @@
 # Networking
 
-## Task 2 - Configuring DHCP, DNS servers and dynamic routing using OSPF protocol
+## Task 2 - Configuring DHCP and DNS servers
 
 1. **Use already created internal-network for three VMs (VM1-VM3). VM1 has NAT and internal, VM2, VM3 – internal only interfaces.**
 

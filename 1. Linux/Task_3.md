@@ -456,6 +456,6 @@
     ![](images/wireshark_ssh_1.png)
     ![](images/wireshark_ssh_2.png)
 
-    Telnet, on the other hand, is insecure.:
+    Telnet, on the other hand, is insecure:
 
     ![](images/telnet.png)
