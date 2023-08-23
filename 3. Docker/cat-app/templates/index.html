@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cat Picture of the Day</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Cat Picture of the Day</h1>
+        <img src="{{ cat_image }}" alt="Random Cat Image">
+    </div>
+</body>
+</html>
