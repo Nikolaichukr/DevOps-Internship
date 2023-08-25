@@ -6,13 +6,14 @@ For example, this file was created solely with CLI.
 nano readme.md
 ```
 
-After that it was added to git.
+After that it was added to git and commited.
 
 ```
 git add readme.md
+git commit -m "Added readme.md"
 ```
 
-And after that it was pushed.
+Lastly, it was pushed to GitHub.
 
 ```
 git push origin main
