@@ -10,8 +10,10 @@
  - **examples of using the command with options**
  - **other optional information**
 
-**Each part must be added as a separate command.**
+**Each part must be added as a separate commit.**
 
 ## Git config
 
-This repo will be updated in future commits.
+### General Description
+
+The `git config` command is used to configure various aspects of Git, such as user information, default behaviors, aliases, and more. Configuration options can be set at three different levels: system-wide, user-specific, and repository-specific.
