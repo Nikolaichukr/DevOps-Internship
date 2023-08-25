@@ -17,3 +17,11 @@
 ### General Description
 
 The `git config` command is used to configure various aspects of Git, such as user information, default behaviors, aliases, and more. Configuration options can be set at three different levels: system-wide, user-specific, and repository-specific.
+
+### Command Usage Syntax
+
+The `git config` syntax aligns with the general usage syntax:
+
+```bash
+git config [<options>] [<name> [<value>]]
+```
