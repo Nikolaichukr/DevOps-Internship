@@ -25,3 +25,9 @@ The `git config` syntax aligns with the general usage syntax:
 ```bash
 git config [<options>] [<name> [<value>]]
 ```
+
+### Possible Options and Their Purpose
+
+- `--global`: This option sets the configuration at the user level, affecting all repositories for that user. It's usually used for setting personal information like name and email.
+- `--system`: This option sets the configuration at the system level, affecting all users on the system. It requires administrator privileges.
+- `--local` (default): This option sets the configuration at the repository level, only affecting the current repository.
