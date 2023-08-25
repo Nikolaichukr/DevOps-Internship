@@ -53,3 +53,10 @@ git config [<options>] [<name> [<value>]]
     ```bash
     git config --global --list
     ```
+
+### Other Optional Information
+
+- Configuration options can also be set directly in the .gitconfig file, which is located in your user's home directory (~/.gitconfig).
+- Repository-specific configurations are stored in the .git/config file within the repository.
+- Use git config `--unset <name>` to remove a specific configuration option.
+- Use git config `--unset-all <name>` to remove a configuration option from all levels.
