@@ -31,3 +31,25 @@ git config [<options>] [<name> [<value>]]
 - `--global`: This option sets the configuration at the user level, affecting all repositories for that user. It's usually used for setting personal information like name and email.
 - `--system`: This option sets the configuration at the system level, affecting all users on the system. It requires administrator privileges.
 - `--local` (default): This option sets the configuration at the repository level, only affecting the current repository.
+
+
+### Examples of Using the Command with Options
+
+1. Set user-specific name and email:
+
+    ```bash
+    git config --global user.name "Your Name"
+    git config --global user.email "your.email@example.com"
+    ```
+
+2. Set an alias for a commonly used command:
+
+    ```bash
+    git config --global alias.co checkout
+    ```
+
+3. Display the user-level configuration:
+
+    ```bash
+    git config --global --list
+    ```
