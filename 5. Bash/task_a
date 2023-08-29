@@ -1,0 +1,52 @@
+#!/bin/bash
+
+display_help() {
+    echo "Usage: $0 [options]"
+    echo "Options:"
+    echo "  --all        Display IP addresses and symbolic names of all hosts in the current subnet."
+    echo "  --target     Display a list of open system TCP ports."
+}
+
+display_all_hosts() {
+    echo "Displaying IP addresses and symbolic names of all hosts in the current subnet."
+
+    # Get the local IP address and subnet
+    local_ip=$(hostname -I | awk '{print $1}')
+    subnet=$(echo "$local_ip" | cut -d. -f1,2,3)
+
+    nmap_output=$(nmap -sn "$subnet.0/24" | grep "Nmap scan report" | awk '{print $5 "\t" $6}') # Use nmap to discover hosts in the subnet
+
+    echo "$nmap_output" # Display IP addresses and hostnames
+}
+
+display_open_ports() {
+    echo "Displaying a list of open system TCP ports."
+    open_ports=$(ss -tuln | awk '/^tcp/ {print $5}' | awk -F':' '{print $2}')
+
+    echo "$open_ports"
+}
+
+if [ $# -eq 0 ]; then
+    display_help
+    exit 1
+fi
+
+while [[ $# -gt 0 ]]; do
+    key="$1"
+
+    case $key in
+        --all)
+            display_all_hosts
+            shift
+            ;;
+        --target)
+            display_open_ports
+            shift
+            ;;
+        *)
+            echo "Unknown option: $key"
+            display_help
+            exit 1
+            ;;
+    esac
+done

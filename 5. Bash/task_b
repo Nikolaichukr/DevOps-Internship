@@ -1,0 +1,21 @@
+#!/bin/bash
+
+log_file="apache_logs.txt"
+
+most_common_ip=$(awk '{ print $1 }' "$log_file" | sort | uniq -c | sort -rn | head -n 1 | awk '{ print $2 }')
+echo "1. IP with the most requests: $most_common_ip"
+
+most_requested_page=$(awk '{ print $7 }' "$log_file" | sort | uniq -c | sort -rn | head -n 1 | awk '{ print $2 }')
+echo "2. Most requested page: $most_requested_page"
+
+echo "3. Number of requests from each IP:"
+awk '{ print $1 }' "$log_file" | sort | uniq -c | sort -rn
+
+echo "4. Non-existent pages referred to:"
+awk '$9 == 302 {print $7}' "$log_file" | sort | uniq
+
+busiest_time=$(awk -F'[][]' '{print $2}' "$log_file" | sort | uniq -c | sort -rn | head -n 1 | awk '{print $2}')
+echo "5. Busiest time: $busiest_time"
+
+echo "6. Search bots that accessed the site (User Agent + IP):"
+awk -F'"' '$6 ~ /bot/ {print $1, $6}' apache_logs.txt | sort | uniq

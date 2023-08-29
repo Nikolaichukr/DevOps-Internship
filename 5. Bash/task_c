@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Check if both source and destination directories are provided as arguments
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 <source_directory> <destination_directory>"
+    exit 1
+fi
+
+source_dir="$1"
+dest_dir="$2"
+log_file="backup_log.txt"
+
+mkdir -p "$dest_dir" # Create destination directory if it doesn't exist
+
+get_timestamp() {
+    date '+%Y-%m-%d %H:%M:%S' # Get current time
+}
+
+# Check for added files
+for file in $(diff -rq "$source_dir" "$dest_dir" | grep 'Only in '"$source_dir" | awk -F': ' '{print $2}'); do
+    echo "$(get_timestamp) - ADDED: $file" >> "$log_file"
+done
+
+# Check for deleted files
+for file in $(diff -rq "$source_dir" "$dest_dir" | grep 'Only in '"$dest_dir" | awk -F': ' '{print $2}'); do
+    echo "$(get_timestamp) - DELETED: $file" >> "$log_file"
+done
+
+# Perform sync using rsync
+rsync -av --delete "$source_dir/" "$dest_dir/"
